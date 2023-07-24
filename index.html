@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Control Panel</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script>
+    // Initialize Firebase with your web app's Firebase configuration
+    var firebaseConfig = {
+  apiKey: "AIzaSyAn3SjP8Mr3zb2CevB7BqviscaOlSWkTI0",
+  authDomain: "autoblend-aecac.firebaseapp.com",
+  databaseURL: "https://autoblend-aecac-default-rtdb.firebaseio.com",
+  projectId: "autoblend-aecac",
+  storageBucket: "autoblend-aecac.appspot.com",
+  messagingSenderId: "400824416363",
+  appId: "1:400824416363:web:8d8218e91fa0f75850192e"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var dbRef = firebase.database().ref();
+
+    function toggleValue1() {
+      dbRef.child("L1").once('value', function(snapshot) {
+        var newValue = snapshot.val() === "1" ? "0" : "1";
+        dbRef.child("L1").set(newValue);
+      });
+    }
+
+    function toggleValue2() {
+      dbRef.child("L2").once('value', function(snapshot) {
+        var newValue = snapshot.val() === "1" ? "0" : "1";
+        dbRef.child("L2").set(newValue);
+      });
+    }
+
+    function toggleValue3() {
+      dbRef.child("L3").once('value', function(snapshot) {
+        var newValue = snapshot.val() === "1" ? "0" : "1";
+        dbRef.child("L3").set(newValue);
+        if (newValue === "1") {
+          setTimeout(function() {
+            dbRef.child("L3").set("0");
+          }, 5000); // Set L3 to 0 after 5 seconds (5000 milliseconds)
+        }
+      });
+    }
+
+
+
+
+    // Monitor changes to the database and update the button text accordingly
+    dbRef.child("L1").on('value', function(snapshot) {
+      document.getElementById("value1").innerHTML = "Value for /L1: " + snapshot.val();
+    });
+
+    dbRef.child("L2").on('value', function(snapshot) {
+      document.getElementById("value2").innerHTML = "Value for /L2: " + snapshot.val();
+    });
+
+    dbRef.child("L3").on('value', function(snapshot) {
+      document.getElementById("value3").innerHTML = "Value for /L3: " + snapshot.val();
+    });
+
+  </script>
+</head>
+<body>
+  <h1>Firebase Control Panel</h1>
+  <p id="value1">Value for /L1: Loading...</p>
+  <button onclick="toggleValue1()">Toggle</button>
+  <p id="value2">Value for /L2: Loading...</p>
+  <button onclick="toggleValue2()">Toggle</button>
+  <p id="value3">Value for /L3: Loading...</p>
+  <button onclick="toggleValue3()">Toggle</button>
+</body>
+</html>
